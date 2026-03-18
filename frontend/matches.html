@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Matches — CampusLink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --purple:    #534AB7;
+      --purple-lt: #EEEDFE;
+      --green:     #085041;
+      --green-mid: #1D9E75;
+      --green-lt:  #E1F5EE;
+      --coral:     #D85A30;
+      --coral-lt:  #FAECE7;
+      --amber:     #EF9F27;
+      --amber-lt:  #FAEEDA;
+      --dark:      #1a1a2e;
+      --gray:      #6B7280;
+      --border:    #E5E4F0;
+      --bg:        #F7F6FF;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px; background: var(--dark);
+      min-height: 100vh; position: fixed;
+      left:0; top:0; display:flex;
+      flex-direction:column; padding-bottom:24px; z-index:100;
+    }
+    .sidebar-logo {
+      padding:24px 24px 20px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      font-family:'Syne',sans-serif; font-size:20px; font-weight:800;
+      color:white; text-decoration:none; display:block;
+    }
+    .sidebar-logo span { color: var(--green-mid); }
+    .sidebar-user {
+      display:flex; align-items:center; gap:10px;
+      padding:16px 24px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      margin-bottom:8px;
+    }
+    .sidebar-avatar {
+      width:38px; height:38px; border-radius:50%;
+      background:var(--purple);
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px; flex-shrink:0;
+    }
+    .sidebar-name { font-size:13px; font-weight:600; color:white; }
+    .sidebar-dept { font-size:11px; color:#9FA6B2; }
+    .nav-item {
+      display:flex; align-items:center; gap:12px;
+      padding:12px 24px; color:#9FA6B2;
+      text-decoration:none; font-size:14px; font-weight:500;
+      transition:all 0.15s; cursor:pointer;
+      border:none; background:none; width:100%; text-align:left;
+    }
+    .nav-item:hover  { background:rgba(255,255,255,0.06); color:white; }
+    .nav-item.active { background:var(--purple); color:white; }
+    .nav-icon { font-size:16px; width:20px; text-align:center; }
+    .nav-section-title {
+      font-size:10px; font-weight:700; color:#555;
+      padding:16px 24px 6px; letter-spacing:1px; text-transform:uppercase;
+    }
+    .sidebar-bottom {
+      margin-top:auto; padding-top:16px;
+      border-top:1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── MAIN ── */
+    .main { margin-left:240px; flex:1; display:flex; flex-direction:column; }
+    .topbar {
+      background:white; border-bottom:1px solid var(--border);
+      padding:16px 32px; display:flex;
+      justify-content:space-between; align-items:center;
+      position:sticky; top:0; z-index:50;
+    }
+    .topbar-title { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; }
+    .topbar-right  { display:flex; align-items:center; gap:12px; }
+    .topbar-avatar {
+      width:36px; height:36px; border-radius:50%;
+      background:var(--purple);
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; color:white; font-weight:700; cursor:pointer;
+    }
+
+    /* ── CONTENT ── */
+    .content { padding:32px; }
+
+    /* ── MATCH SCORE BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d2460 100%);
+      border-radius: 20px;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .banner-text h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px; font-weight: 800;
+      color: white; margin-bottom: 6px;
+    }
+    .banner-text p { font-size: 13px; color: #9FA6B2; }
+    .banner-stats { display:flex; gap:24px; }
+    .banner-stat { text-align:center; }
+    .banner-stat-num {
+      font-family:'Syne',sans-serif;
+      font-size:28px; font-weight:800; color:var(--green-mid);
+    }
+    .banner-stat-label { font-size:11px; color:#9FA6B2; margin-top:2px; }
+
+    /* ── FILTER TABS ── */
+    .tabs {
+      display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;
+    }
+    .tab-btn {
+      padding:8px 20px; border-radius:20px;
+      border:1.5px solid var(--border);
+      background:white; color:var(--gray);
+      font-size:13px; font-weight:600;
+      cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:all 0.15s;
+    }
+    .tab-btn:hover  { border-color:var(--purple); color:var(--purple); }
+    .tab-btn.active { background:var(--purple); border-color:var(--purple); color:white; }
+
+    /* ── MATCHES GRID ── */
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    /* ── MATCH CARD ── */
+    .match-card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .match-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(83,74,183,0.12);
+      border-color: var(--purple);
+    }
+
+    /* Match percentage badge — top right corner */
+    .match-pct {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--green-lt);
+      color: var(--green);
+      font-size: 12px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid #5DCAA5;
+    }
+
+    /* New badge — top left corner */
+    .new-badge {
+      position: absolute;
+      top: 16px; left: 16px;
+      background: var(--coral-lt);
+      color: var(--coral);
+      font-size: 10px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px;
+    }
+
+    /* Big avatar */
+    .match-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      border: 3px solid var(--border);
+    }
+
+    .match-name  { font-size:16px; font-weight:700; }
+    .match-dept  { font-size:13px; color:var(--gray); }
+
+    /* Shared skills row */
+    .shared-label {
+      font-size:11px; color:var(--gray);
+      font-weight:600; text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .match-skills { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+    .skill-tag {
+      font-size:11px; padding:3px 10px;
+      border-radius:10px; font-weight:600;
+      background:var(--purple-lt); color:var(--purple);
+    }
+
+    /* Why matched reason */
+    .match-reason {
+      font-size:12px; color:var(--gray);
+      background:var(--bg); border-radius:8px;
+      padding:8px 12px; line-height:1.5;
+      border: 1px solid var(--border);
+      width:100%;
+    }
+
+    /* Action buttons */
+    .match-actions { display:flex; gap:8px; width:100%; }
+    .btn-connect {
+      flex:1; padding:9px;
+      background:var(--purple); color:white;
+      border:none; border-radius:9px;
+      font-size:13px; font-weight:600;
+      cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:all 0.15s;
+    }
+    .btn-connect:hover { background:#3C3489; }
+    .btn-connect.connected {
+      background:var(--green-lt); color:var(--green);
+      cursor:default; border:1px solid #5DCAA5;
+    }
+    .btn-skip {
+      padding:9px 14px;
+      background:var(--bg); color:var(--gray);
+      border:1.5px solid var(--border); border-radius:9px;
+      font-size:13px; cursor:pointer;
+      font-family:'DM Sans',sans-serif;
+      transition:all 0.15s;
+    }
+    .btn-skip:hover { background:white; border-color:#ccc; }
+
+    /* ── CONNECTED SECTION ── */
+    .section-title {
+      font-family:'Syne',sans-serif;
+      font-size:17px; font-weight:800;
+      margin-bottom:16px; margin-top:32px;
+    }
+
+    .connected-list { display:flex; flex-direction:column; gap:12px; }
+    .connected-item {
+      background:white; border-radius:14px;
+      border:1px solid var(--border);
+      padding:16px 20px;
+      display:flex; align-items:center; gap:14px;
+      transition:background 0.15s;
+    }
+    .connected-item:hover { background:#FAFAFE; }
+    .conn-avatar {
+      width:46px; height:46px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; flex-shrink:0;
+    }
+    .conn-name  { font-size:15px; font-weight:700; margin-bottom:2px; }
+    .conn-dept  { font-size:12px; color:var(--gray); margin-bottom:6px; }
+    .conn-tags  { display:flex; gap:5px; flex-wrap:wrap; }
+    .conn-tag {
+      font-size:10px; padding:2px 9px;
+      border-radius:10px; font-weight:600;
+      background:var(--green-lt); color:var(--green);
+    }
+    .conn-actions { margin-left:auto; display:flex; gap:8px; }
+    .msg-btn {
+      padding:7px 16px; border-radius:8px;
+      background:var(--purple-lt); color:var(--purple);
+      border:none; font-size:12px; font-weight:600;
+      cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:all 0.15s;
+    }
+    .msg-btn:hover { background:var(--purple); color:white; }
+
+    /* ── TOAST ── */
+    .toast {
+      position:fixed; bottom:28px; right:28px;
+      background:var(--dark); color:white;
+      padding:14px 22px; border-radius:12px;
+      font-size:14px; font-weight:500;
+      box-shadow:0 8px 24px rgba(0,0,0,0.2);
+      transform:translateY(80px); opacity:0;
+      transition:all 0.3s; z-index:999;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+
+    @media(max-width:1100px){ .matches-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:900px){
+      .sidebar{display:none;}
+      .main{margin-left:0;}
+      .matches-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">Campus<span>Link</span></a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">👨‍💻</div>
+      <div>
+        <div class="sidebar-name">Aditya Kumar</div>
+        <div class="sidebar-dept">CS · 2nd Year</div>
+      </div>
+    </div>
+    <div class="nav-section-title">Main</div>
+    <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span>Dashboard</a>
+    <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span>My Profile</a>
+    <a class="nav-item" href="opportunities.html"><span class="nav-icon">📋</span>Opportunities</a>
+    <a class="nav-item active" href="matches.html"><span class="nav-icon">🤝</span>My Matches</a>
+    <a class="nav-item" href="teams.html"><span class="nav-icon">👥</span>My Teams</a>
+    <div class="nav-section-title">Discover</div>
+    <a class="nav-item" href="browse.html"><span class="nav-icon">🔍</span>Browse Students</a>
+    <a class="nav-item" href="leaderboard.html"><span class="nav-icon">🏆</span>Leaderboard</a>
+    <div class="sidebar-bottom">
+      <a class="nav-item" href="login.html"><span class="nav-icon">🚪</span>Logout</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">My Matches</div>
+      <div class="topbar-right">
+        <div class="topbar-avatar">AK</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- BANNER -->
+      <div class="banner">
+        <div class="banner-text">
+          <h2>🤝 Your Skill-Based Matches</h2>
+          <p>Students matched to you based on complementary skills and shared interests</p>
+        </div>
+        <div class="banner-stats">
+          <div class="banner-stat">
+            <div class="banner-stat-num">6</div>
+            <div class="banner-stat-label">New Matches</div>
+          </div>
+          <div class="banner-stat">
+            <div class="banner-stat-num">12</div>
+            <div class="banner-stat-label">Connected</div>
+          </div>
+          <div class="banner-stat">
+            <div class="banner-stat-num">3</div>
+            <div class="banner-stat-label">Teams Formed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="setTab(this,'all')">🌟 All Matches</button>
+        <button class="tab-btn" onclick="setTab(this,'design')">🎨 Design</button>
+        <button class="tab-btn" onclick="setTab(this,'business')">💼 Business</button>
+        <button class="tab-btn" onclick="setTab(this,'engineering')">⚙️ Engineering</button>
+        <button class="tab-btn" onclick="setTab(this,'research')">🔬 Research</button>
+      </div>
+
+      <!-- SUGGESTED MATCHES TITLE -->
+      <div class="section-title">✨ Suggested for You</div>
+
+      <!-- MATCHES GRID -->
+      <div class="matches-grid" id="matchesGrid">
+
+        <!-- Match 1 -->
+        <div class="match-card" data-category="design">
+          <div class="match-pct">95% match</div>
+          <div class="new-badge">NEW</div>
+          <div class="match-avatar" style="background:#EEEDFE">👩‍🎨</div>
+          <div class="match-name">Priya Sharma</div>
+          <div class="match-dept">Design · 3rd Year · JNTU</div>
+          <div class="shared-label">Shared Interests</div>
+          <div class="match-skills">
+            <span class="skill-tag">UI/UX</span>
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Hackathons</span>
+          </div>
+          <div class="match-reason">
+            💡 You both want to join SIH 2025 and she brings design skills your team needs
+          </div>
+          <div class="match-actions">
+            <button class="btn-connect" onclick="connectMatch(this)">🤝 Connect</button>
+            <button class="btn-skip" onclick="skipMatch(this)">Skip</button>
+          </div>
+        </div>
+
+        <!-- Match 2 -->
+        <div class="match-card" data-category="business">
+          <div class="match-pct">88% match</div>
+          <div class="new-badge">NEW</div>
+          <div class="match-avatar" style="background:#E1F5EE">👨‍💼</div>
+          <div class="match-name">Rahul Verma</div>
+          <div class="match-dept">MBA · 1st Year · JNTU</div>
+          <div class="shared-label">Shared Interests</div>
+          <div class="match-skills">
+            <span class="skill-tag">Marketing</span>
+            <span class="skill-tag">Finance</span>
+            <span class="skill-tag">Startups</span>
+          </div>
+          <div class="match-reason">
+            💡 He can handle business side of your startup idea while you handle the tech
+          </div>
+          <div class="match-actions">
+            <button class="btn-connect" onclick="connectMatch(this)">🤝 Connect</button>
+            <button class="btn-skip" onclick="skipMatch(this)">Skip</button>
+          </div>
+        </div>
+
+        <!-- Match 3 -->
+        <div class="match-card" data-category="engineering">
+          <div class="match-pct">82% match</div>
+          <div class="match-avatar" style="background:#FAEEDA">👩‍🔬</div>
+          <div class="match-name">Sneha Reddy</div>
+          <div class="match-dept">ECE · 4th Year · JNTU</div>
+          <div class="shared-label">Shared Interests</div>
+          <div class="match-skills">
+            <span class="skill-tag">IoT</span>
+            <span class="skill-tag">Arduino</span>
+            <span class="skill-tag">Hardware</span>
+          </div>
+          <div class="match-reason">
+            💡 Her hardware skills complement your software skills for IEEE Hackathon
+          </div>
+          <div class="match-actions">
+            <button class="btn-connect" onclick="connectMatch(this)">🤝 Connect</button>
+            <button class="btn-skip" onclick="skipMatch(this)">Skip</button>
+          </div>
+        </div>
+
+        <!-- Match 4 -->
+        <div class="match-card" data-category="research">
+          <div class="match-pct">79% match</div>
+          <div class="match-avatar" style="background:#FAECE7">👨‍🔬</div>
+          <div class="match-name">Kiran Patel</div>
+          <div class="match-dept">CS · 3rd Year · JNTU</div>
+          <div class="shared-label">Shared Interests</div>
+          <div class="match-skills">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">NLP</span>
+            <span class="skill-tag">Research</span>
+          </div>
+          <div class="match-reason">
+            💡 Both interested in NLP research — good fit for Prof. Mehta's paper
+          </div>
+          <div class="match-actions">
+            <button class="btn-connect" onclick="connectMatch(this)">🤝 Connect</button>
+            <button class="btn-skip" onclick="skipMatch(this)">Skip</button>
+          </div>
+        </div>
+
+        <!-- Match 5 -->
+        <div class="match-card" data-category="design">
+          <div class="match-pct">74% match</div>
+          <div class="match-avatar" style="background:#EEEDFE">👨‍🎨</div>
+          <div class="match-name">Arjun Nair</div>
+          <div class="match-dept">Design · 2nd Year · JNTU</div>
+          <div class="shared-label">Shared Interests</div>
+          <div class="match-skills">
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Illustration</span>
+            <span class="skill-tag">Branding</span>
+          </div>
+          <div class="match-reason">
+            💡 Can help design your Campus Food App — looking for a dev partner
+          </div>
+          <div class="match-actions">
+            <button class="btn-connect" onclick="connectMatch(this)">🤝 Connect</button>
+            <button class="btn-skip" onclick="skipMatch(this)">Skip</button>
+          </div>
+        </div>
+
+        <!-- Match 6 -->
+        <div class="match-card" data-category="engineering">
+          <div class="match-pct">71% match</div>
+          <div class="match-avatar" style="background:#E1F5EE">👩‍💻</div>
+          <div class="match-name">Divya Menon</div>
+          <div class="match-dept">IT · 2nd Year · JNTU</div>
+          <div class="shared-label">Shared Interests</div>
+          <div class="match-skills">
+            <span class="skill-tag">Flutter</span>
+            <span class="skill-tag">Firebase</span>
+            <span class="skill-tag">Mobile Dev</span>
+          </div>
+          <div class="match-reason">
+            💡 Mobile developer — great fit for the Study Buddy startup project
+          </div>
+          <div class="match-actions">
+            <button class="btn-connect" onclick="connectMatch(this)">🤝 Connect</button>
+            <button class="btn-skip" onclick="skipMatch(this)">Skip</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ALREADY CONNECTED -->
+      <div class="section-title">✅ Already Connected</div>
+      <div class="connected-list" id="connectedList">
+        <!-- Connected students appear here when you click Connect -->
+        <div style="color:var(--gray);font-size:14px;padding:16px 0;">
+          Connect with students above to see them here!
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+
+    // ── TABS ──
+    function setTab(btn, category) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.match-card').forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // ── CONNECT ──
+    function connectMatch(btn) {
+      // Find the card this button belongs to
+      const card = btn.closest('.match-card');
+      const name  = card.querySelector('.match-name').textContent;
+      const dept  = card.querySelector('.match-dept').textContent;
+      const avatar= card.querySelector('.match-avatar').textContent;
+      const tags  = Array.from(card.querySelectorAll('.skill-tag'))
+                        .map(t => t.textContent);
+
+      // Change button state
+      btn.textContent = '✓ Connected';
+      btn.classList.add('connected');
+      btn.disabled = true;
+
+      // Remove NEW badge if present
+      const newBadge = card.querySelector('.new-badge');
+      if (newBadge) newBadge.remove();
+
+      // Add to connected list
+      addToConnected(name, dept, avatar, tags);
+
+      showToast(`✅ Connected with ${name}!`);
+    }
+
+    // ── SKIP ──
+    function skipMatch(btn) {
+      const card = btn.closest('.match-card');
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.9)';
+      card.style.transition = 'all 0.3s';
+      setTimeout(() => { card.style.display = 'none'; }, 300);
+      showToast('Skipped — we will suggest someone else soon');
+    }
+
+    // ── ADD TO CONNECTED LIST ──
+    function addToConnected(name, dept, avatar, tags) {
+      const list = document.getElementById('connectedList');
+
+      // Remove placeholder text on first connection
+      const placeholder = list.querySelector('div[style]');
+      if (placeholder) placeholder.remove();
+
+      const item = document.createElement('div');
+      item.className = 'connected-item';
+      item.innerHTML = `
+        <div class="conn-avatar">${avatar}</div>
+        <div>
+          <div class="conn-name">${name}</div>
+          <div class="conn-dept">${dept}</div>
+          <div class="conn-tags">
+            ${tags.map(t => `<span class="conn-tag">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div class="conn-actions">
+          <button class="msg-btn" onclick="showToast('💬 Messaging coming soon!')">
+            💬 Message
+          </button>
+        </div>
+      `;
+      list.appendChild(item);
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+  </script>
+
+</body>
+</html>

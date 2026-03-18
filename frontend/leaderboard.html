@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leaderboard — CampusLink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --purple:#534AB7; --purple-lt:#EEEDFE;
+      --green:#085041; --green-mid:#1D9E75; --green-lt:#E1F5EE;
+      --coral:#D85A30; --coral-lt:#FAECE7;
+      --amber:#EF9F27; --amber-lt:#FAEEDA;
+      --dark:#1a1a2e; --gray:#6B7280; --border:#E5E4F0; --bg:#F7F6FF;
+      --gold:#F5C518; --silver:#C0C0C0; --bronze:#CD7F32;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--dark); display:flex; min-height:100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width:240px; background:var(--dark); min-height:100vh; position:fixed; left:0; top:0; display:flex; flex-direction:column; padding-bottom:24px; z-index:100; }
+    .sidebar-logo { padding:24px 24px 20px; border-bottom:1px solid rgba(255,255,255,0.08); font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:white; text-decoration:none; display:block; }
+    .sidebar-logo span { color:var(--green-mid); }
+    .sidebar-user { display:flex; align-items:center; gap:10px; padding:16px 24px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:8px; }
+    .sidebar-avatar { width:38px; height:38px; border-radius:50%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .sidebar-name { font-size:13px; font-weight:600; color:white; }
+    .sidebar-dept { font-size:11px; color:#9FA6B2; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:12px 24px; color:#9FA6B2; text-decoration:none; font-size:14px; font-weight:500; transition:all 0.15s; border:none; background:none; width:100%; text-align:left; cursor:pointer; }
+    .nav-item:hover { background:rgba(255,255,255,0.06); color:white; }
+    .nav-item.active { background:var(--purple); color:white; }
+    .nav-icon { font-size:16px; width:20px; text-align:center; }
+    .nav-section-title { font-size:10px; font-weight:700; color:#555; padding:16px 24px 6px; letter-spacing:1px; text-transform:uppercase; }
+    .sidebar-bottom { margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); }
+
+    /* MAIN */
+    .main { margin-left:240px; flex:1; display:flex; flex-direction:column; }
+    .topbar { background:white; border-bottom:1px solid var(--border); padding:16px 32px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; }
+    .topbar-title { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; }
+    .topbar-avatar { width:36px; height:36px; border-radius:50%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-size:14px; color:white; font-weight:700; }
+
+    /* CONTENT */
+    .content { padding:32px; }
+
+    /* BANNER */
+    .banner { background:linear-gradient(135deg,#1a1a2e,#2d2460); border-radius:20px; padding:28px 32px; display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+    .banner h2 { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; color:white; margin-bottom:6px; }
+    .banner p { font-size:13px; color:#9FA6B2; }
+    .banner-emoji { font-size:52px; }
+
+    /* TABS */
+    .tabs { display:flex; gap:8px; margin-bottom:24px; }
+    .tab-btn { padding:8px 20px; border-radius:20px; border:1.5px solid var(--border); background:white; color:var(--gray); font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
+    .tab-btn:hover { border-color:var(--purple); color:var(--purple); }
+    .tab-btn.active { background:var(--purple); border-color:var(--purple); color:white; }
+
+    /* TOP 3 PODIUM */
+    .podium { display:flex; justify-content:center; align-items:flex-end; gap:16px; margin-bottom:32px; }
+    .podium-item { text-align:center; }
+    .podium-avatar { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 8px; border:3px solid; }
+    .podium-name { font-size:13px; font-weight:700; margin-bottom:2px; }
+    .podium-points { font-size:12px; color:var(--gray); margin-bottom:8px; }
+    .podium-block { border-radius:10px 10px 0 0; width:100px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:white; font-family:'Syne',sans-serif; }
+    .podium-1 .podium-avatar { border-color:var(--gold); background:#FFF9E6; }
+    .podium-2 .podium-avatar { border-color:var(--silver); background:#F5F5F5; }
+    .podium-3 .podium-avatar { border-color:var(--bronze); background:#FDF0E6; }
+    .podium-1 .podium-block { background:var(--gold); height:100px; }
+    .podium-2 .podium-block { background:var(--silver); height:72px; }
+    .podium-3 .podium-block { background:var(--bronze); height:56px; }
+
+    /* LEADERBOARD TABLE */
+    .leaderboard-card { background:white; border-radius:16px; border:1px solid var(--border); overflow:hidden; }
+    .table-head { display:grid; grid-template-columns:60px 1fr 120px 100px 100px; padding:12px 20px; background:var(--bg); border-bottom:1px solid var(--border); font-size:11px; font-weight:700; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; }
+    .table-row { display:grid; grid-template-columns:60px 1fr 120px 100px 100px; padding:14px 20px; border-bottom:1px solid #F5F4FC; align-items:center; transition:background 0.15s; }
+    .table-row:last-child { border-bottom:none; }
+    .table-row:hover { background:#FAFAFE; }
+    .table-row.you { background:var(--purple-lt); }
+
+    .rank { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:var(--gray); }
+    .rank.gold   { color:var(--gold); }
+    .rank.silver { color:var(--silver); }
+    .rank.bronze { color:var(--bronze); }
+
+    .user-info { display:flex; align-items:center; gap:10px; }
+    .user-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .user-name { font-size:14px; font-weight:600; }
+    .user-dept { font-size:11px; color:var(--gray); }
+    .you-badge { font-size:10px; background:var(--purple); color:white; padding:2px 8px; border-radius:10px; font-weight:700; margin-left:6px; }
+
+    .points { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:var(--purple); }
+    .connections { font-size:13px; color:var(--gray); }
+    .teams-col { font-size:13px; color:var(--gray); }
+
+    /* SCORE BREAKDOWN */
+    .score-info { background:var(--bg); border-radius:12px; border:1px solid var(--border); padding:20px; margin-top:24px; }
+    .score-title { font-size:14px; font-weight:700; margin-bottom:14px; }
+    .score-items { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .score-item { text-align:center; background:white; border-radius:10px; padding:14px; border:1px solid var(--border); }
+    .score-item-num { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--purple); }
+    .score-item-label { font-size:11px; color:var(--gray); margin-top:4px; }
+
+    @media(max-width:900px){ .sidebar{display:none;} .main{margin-left:0;} .score-items{grid-template-columns:repeat(2,1fr);} }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">Campus<span>Link</span></a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">👨‍💻</div>
+      <div><div class="sidebar-name">Aditya Kumar</div><div class="sidebar-dept">CS · 2nd Year</div></div>
+    </div>
+    <div class="nav-section-title">Main</div>
+    <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span>Dashboard</a>
+    <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span>My Profile</a>
+    <a class="nav-item" href="opportunities.html"><span class="nav-icon">📋</span>Opportunities</a>
+    <a class="nav-item" href="matches.html"><span class="nav-icon">🤝</span>My Matches</a>
+    <a class="nav-item" href="teams.html"><span class="nav-icon">👥</span>My Teams</a>
+    <div class="nav-section-title">Discover</div>
+    <a class="nav-item" href="browse.html"><span class="nav-icon">🔍</span>Browse Students</a>
+    <a class="nav-item active" href="leaderboard.html"><span class="nav-icon">🏆</span>Leaderboard</a>
+    <div class="sidebar-bottom">
+      <a class="nav-item" href="login.html"><span class="nav-icon">🚪</span>Logout</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Leaderboard</div>
+      <div class="topbar-avatar">AK</div>
+    </div>
+
+    <div class="content">
+
+      <!-- BANNER -->
+      <div class="banner">
+        <div>
+          <h2>🏆 Campus Leaderboard</h2>
+          <p>Top students ranked by connections, teams formed and opportunities completed</p>
+        </div>
+        <div class="banner-emoji">🥇</div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active">🌟 All Time</button>
+        <button class="tab-btn">📅 This Month</button>
+        <button class="tab-btn">🏫 My Department</button>
+      </div>
+
+      <!-- TOP 3 PODIUM -->
+      <div class="podium">
+
+        <!-- 2nd Place -->
+        <div class="podium-item podium-2">
+          <div class="podium-avatar">👩‍🎨</div>
+          <div class="podium-name">Priya S.</div>
+          <div class="podium-points">1840 pts</div>
+          <div class="podium-block">2</div>
+        </div>
+
+        <!-- 1st Place -->
+        <div class="podium-item podium-1">
+          <div class="podium-avatar">👨‍💻</div>
+          <div class="podium-name">Vikram S.</div>
+          <div class="podium-points">2240 pts</div>
+          <div class="podium-block">1</div>
+        </div>
+
+        <!-- 3rd Place -->
+        <div class="podium-item podium-3">
+          <div class="podium-avatar">👩‍🔬</div>
+          <div class="podium-name">Sneha R.</div>
+          <div class="podium-points">1620 pts</div>
+          <div class="podium-block">3</div>
+        </div>
+
+      </div>
+
+      <!-- LEADERBOARD TABLE -->
+      <div class="leaderboard-card">
+        <div class="table-head">
+          <div>Rank</div>
+          <div>Student</div>
+          <div>Points</div>
+          <div>Connections</div>
+          <div>Teams</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank gold">🥇</div>
+          <div class="user-info"><div class="user-avatar" style="background:#EEEDFE">👨‍💻</div><div><div class="user-name">Vikram Singh</div><div class="user-dept">CS · 4th Year</div></div></div>
+          <div class="points">2240</div>
+          <div class="connections">28</div>
+          <div class="teams-col">5</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank silver">🥈</div>
+          <div class="user-info"><div class="user-avatar" style="background:#EEEDFE">👩‍🎨</div><div><div class="user-name">Priya Sharma</div><div class="user-dept">Design · 3rd Year</div></div></div>
+          <div class="points">1840</div>
+          <div class="connections">24</div>
+          <div class="teams-col">4</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank bronze">🥉</div>
+          <div class="user-info"><div class="user-avatar" style="background:#FAEEDA">👩‍🔬</div><div><div class="user-name">Sneha Reddy</div><div class="user-dept">ECE · 4th Year</div></div></div>
+          <div class="points">1620</div>
+          <div class="connections">20</div>
+          <div class="teams-col">3</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank">4</div>
+          <div class="user-info"><div class="user-avatar" style="background:#FAECE7">👨‍🔬</div><div><div class="user-name">Kiran Patel</div><div class="user-dept">CS · 3rd Year</div></div></div>
+          <div class="points">1480</div>
+          <div class="connections">18</div>
+          <div class="teams-col">3</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank">5</div>
+          <div class="user-info"><div class="user-avatar" style="background:#E1F5EE">👩‍💻</div><div><div class="user-name">Divya Menon</div><div class="user-dept">IT · 2nd Year</div></div></div>
+          <div class="points">1320</div>
+          <div class="connections">16</div>
+          <div class="teams-col">2</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank">6</div>
+          <div class="user-info"><div class="user-avatar" style="background:#E1F5EE">👨‍💼</div><div><div class="user-name">Rahul Verma</div><div class="user-dept">MBA · 1st Year</div></div></div>
+          <div class="points">1180</div>
+          <div class="connections">14</div>
+          <div class="teams-col">2</div>
+        </div>
+
+        <div class="table-row">
+          <div class="rank">7</div>
+          <div class="user-info"><div class="user-avatar" style="background:#EEEDFE">👨‍🎨</div><div><div class="user-name">Arjun Nair</div><div class="user-dept">Design · 2nd Year</div></div></div>
+          <div class="points">1020</div>
+          <div class="connections">12</div>
+          <div class="teams-col">2</div>
+        </div>
+
+        <!-- YOU -->
+        <div class="table-row you">
+          <div class="rank">8</div>
+          <div class="user-info">
+            <div class="user-avatar" style="background:var(--purple)">👨‍💻</div>
+            <div>
+              <div class="user-name">Aditya Kumar <span class="you-badge">You</span></div>
+              <div class="user-dept">CS · 2nd Year</div>
+            </div>
+          </div>
+          <div class="points">860</div>
+          <div class="connections">12</div>
+          <div class="teams-col">2</div>
+        </div>
+
+      </div>
+
+      <!-- YOUR SCORE BREAKDOWN -->
+      <div class="score-info">
+        <div class="score-title">📊 Your Score Breakdown</div>
+        <div class="score-items">
+          <div class="score-item">
+            <div class="score-item-num">12</div>
+            <div class="score-item-label">Connections × 20pts</div>
+          </div>
+          <div class="score-item">
+            <div class="score-item-num">2</div>
+            <div class="score-item-label">Teams × 100pts</div>
+          </div>
+          <div class="score-item">
+            <div class="score-item-num">8</div>
+            <div class="score-item-label">Skills × 20pts</div>
+          </div>
+          <div class="score-item">
+            <div class="score-item-num">5</div>
+            <div class="score-item-label">Opportunities × 40pts</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

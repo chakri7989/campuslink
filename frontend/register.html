@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  WHAT IS <!DOCTYPE html> ?
+  This tells the browser: "Hey! This is an HTML5 file."
+  Always put this on the very first line of every HTML file.
+  ============================================================
+-->
+
+<!--
+  WHAT IS <html> ?
+  Everything inside <html>...</html> is your web page.
+  lang="en" means the page language is English.
+-->
+<html lang="en">
+
+<!--
+  ============================================================
+  THE <head> SECTION
+  This section is NOT visible on the page.
+  It contains settings, styles, and information FOR the browser.
+  ============================================================
+-->
+<head>
+  <!-- UTF-8 = supports all characters including emojis -->
+  <meta charset="UTF-8">
+
+  <!-- Makes the page look good on mobile phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- This is what shows in the browser tab at the top -->
+  <title>Register — CampusLink</title>
+
+  <!-- Loading Google Fonts (beautiful free fonts from Google) -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!--
+    ============================================================
+    CSS — STYLES
+    Everything between <style>...</style> controls how things LOOK.
+    Think: colors, sizes, fonts, positions.
+    ============================================================
+  -->
+  <style>
+
+    /* ---- CSS VARIABLES (Reusable colors) ----
+       Instead of writing "#534AB7" everywhere,
+       we name it --purple and use that name.
+       Change it in ONE place = changes everywhere! */
+    :root {
+      --purple:    #534AB7;
+      --purple-lt: #EEEDFE;
+      --green:     #085041;
+      --green-mid: #1D9E75;
+      --green-lt:  #E1F5EE;
+      --coral:     #D85A30;
+      --dark:      #1a1a2e;
+      --gray:      #6B7280;
+      --bg:        #F7F6FF;
+      --white:     #ffffff;
+      --error:     #E24B4A;
+    }
+
+    /* ---- RESET ----
+       Browsers add default spacing/styling to elements.
+       This line removes all of that so WE control everything. */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box; /* Makes sizing predictable */
+    }
+
+    /* ---- BODY ----
+       The body is the whole visible page area. */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh; /* vh = viewport height, 100vh = full screen height */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- NAVBAR ---- */
+    nav {
+      display: flex;              /* Puts items in a row */
+      justify-content: space-between; /* Pushes logo left, link right */
+      align-items: center;        /* Centers items vertically */
+      padding: 16px 48px;
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--purple);
+      text-decoration: none; /* Removes underline from link */
+    }
+    .logo span { color: var(--green-mid); }
+
+    .nav-login {
+      font-size: 14px;
+      color: var(--gray);
+      text-decoration: none;
+    }
+    .nav-login strong { color: var(--purple); }
+    .nav-login:hover strong { text-decoration: underline; }
+
+    /* ---- MAIN CONTAINER ----
+       Centers the register card in the middle of the screen */
+    .page-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    /* ---- REGISTER CARD ----
+       The white box where the form lives */
+    .register-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      padding: 48px;
+      width: 100%;
+      max-width: 520px; /* Never wider than 520px */
+    }
+
+    /* ---- CARD HEADER ---- */
+    .card-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .card-emoji {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 15px;
+      color: var(--gray);
+    }
+
+    /* ---- PROGRESS STEPS ----
+       Shows which step of registration the user is on */
+    .steps-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 32px;
+      gap: 8px;
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-dot.active {
+      background: var(--purple);
+      color: white;
+    }
+
+    .step-dot.done {
+      background: var(--green-mid);
+      color: white;
+    }
+
+    .step-dot.pending {
+      background: #F0EFF8;
+      color: var(--gray);
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #E5E4F0;
+    }
+
+    .step-line.done { background: var(--green-mid); }
+
+    /* ---- FORM GROUPS ----
+       Each label + input pair */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Two inputs side by side */
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column; /* Stack label above input */
+    }
+
+    /* ---- LABEL ----
+       The text above each input */
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    /* ---- INPUT FIELDS ----
+       Text boxes where user types */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #E5E4F0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark);
+      background: #FAFAFA;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none; /* Remove default blue outline */
+    }
+
+    /* When user clicks on an input (focus state) */
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--purple);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(83,74,183,0.1);
+    }
+
+    /* When input has an error */
+    input.error {
+      border-color: var(--error);
+    }
+
+    /* Error message text below input */
+    .error-msg {
+      font-size: 11px;
+      color: var(--error);
+      margin-top: 4px;
+      display: none; /* Hidden by default, JS will show it */
+    }
+
+    /* ---- SKILL TAGS SELECTOR ---- */
+    .skills-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* Each skill button */
+    .skill-btn {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #E5E4F0;
+      background: #FAFAFA;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer; /* Shows hand cursor on hover */
+      transition: all 0.15s;
+    }
+
+    /* When skill is selected */
+    .skill-btn.selected {
+      background: var(--purple-lt);
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    .skill-btn:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    /* ---- PASSWORD STRENGTH BAR ---- */
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: #E5E4F0;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .strength-text {
+      font-size: 11px;
+      margin-top: 4px;
+      color: var(--gray);
+    }
+
+    /* ---- SUBMIT BUTTON ---- */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      background: #3C3489;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0px);
+    }
+
+    /* ---- LOGIN LINK below form ---- */
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .login-link a {
+      color: var(--purple);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .login-link a:hover { text-decoration: underline; }
+
+    /* ---- DIVIDER ---- */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--gray);
+      font-size: 13px;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E5E4F0;
+    }
+
+    /* ---- SUCCESS STATE ---- */
+    .success-state {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--green-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 16px;
+    }
+
+    /* ---- RESPONSIVE (mobile) ---- */
+    @media (max-width: 600px) {
+      .register-card { padding: 32px 24px; }
+      .form-row { grid-template-columns: 1fr; } /* Stack on mobile */
+      nav { padding: 16px 24px; }
+    }
+
+  </style>
+</head>
+
+<!--
+  ============================================================
+  THE <body> SECTION
+  Everything inside <body>...</body> is VISIBLE on the page.
+  ============================================================
+-->
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="../index.html" class="logo">Campus<span>Link</span></a>
+    <a href="login.html" class="nav-login">Already have an account? <strong>Log in</strong></a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="page-wrapper">
+    <div class="register-card">
+
+      <!-- CARD HEADER -->
+      <div class="card-header">
+        <div class="card-emoji">🎓</div>
+        <h1 class="card-title">Create Your Profile</h1>
+        <p class="card-subtitle">Join your campus collaboration network</p>
+      </div>
+
+      <!-- PROGRESS STEPS -->
+      <div class="steps-bar">
+        <div class="step-dot active">1</div>
+        <div class="step-line"></div>
+        <div class="step-dot pending">2</div>
+        <div class="step-line"></div>
+        <div class="step-dot pending">3</div>
+      </div>
+
+      <!--
+        THE FORM
+        action="" = where to send data (we'll fill this with backend URL later)
+        method="POST" = how to send it (POST = secure, hidden)
+        id="registerForm" = JavaScript will find this form using this id
+      -->
+      <form id="registerForm" novalidate>
+
+        <!-- ROW 1: First Name + Last Name side by side -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <!-- label for="firstName" connects to input id="firstName" -->
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="e.g. Aditya"
+              required
+            />
+            <span class="error-msg" id="firstNameError">Please enter your first name</span>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="e.g. Kumar"
+              required
+            />
+            <span class="error-msg" id="lastNameError">Please enter your last name</span>
+          </div>
+
+        </div>
+
+        <!-- COLLEGE EMAIL -->
+        <div class="form-group">
+          <label for="email">College Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="yourname@college.edu.in"
+            required
+          />
+          <span class="error-msg" id="emailError">Please enter a valid email</span>
+        </div>
+
+        <!-- DEPARTMENT + YEAR side by side -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="department">Department</label>
+            <!--
+              select = dropdown menu
+              Each <option> is one item in the dropdown
+            -->
+            <select id="department" name="department" required>
+              <option value="">Select dept.</option>
+              <option value="cs">Computer Science</option>
+              <option value="it">Information Technology</option>
+              <option value="ece">Electronics</option>
+              <option value="mech">Mechanical</option>
+              <option value="civil">Civil</option>
+              <option value="design">Design</option>
+              <option value="bba">BBA / MBA</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="error-msg" id="deptError">Please select your department</span>
+          </div>
+
+          <div class="form-group">
+            <label for="year">Year of Study</label>
+            <select id="year" name="year" required>
+              <option value="">Select year</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+              <option value="pg">Post Graduate</option>
+            </select>
+            <span class="error-msg" id="yearError">Please select your year</span>
+          </div>
+
+        </div>
+
+        <!-- SKILLS PICKER -->
+        <div>
+          <div class="skills-label">Your Skills <span style="color:var(--gray);font-weight:400">(select all that apply)</span></div>
+          <div class="skills-grid" id="skillsGrid">
+            <!-- These buttons are created by JavaScript below -->
+          </div>
+          <span class="error-msg" id="skillsError" style="display:none">Please select at least one skill</span>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <label for="password">Create Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Minimum 8 characters"
+            required
+          />
+          <!-- Password strength indicator -->
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <div class="strength-text" id="strengthText">Enter a password</div>
+          <span class="error-msg" id="passwordError">Password must be at least 8 characters</span>
+        </div>
+
+        <!-- CONFIRM PASSWORD -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Re-enter your password"
+            required
+          />
+          <span class="error-msg" id="confirmError">Passwords do not match</span>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" class="btn-submit" id="submitBtn">
+          Create My Profile →
+        </button>
+
+        <!-- TERMS note -->
+        <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:12px">
+          By registering you agree to our Terms of Service and Privacy Policy
+        </p>
+
+      </form>
+
+      <!-- SUCCESS MESSAGE (hidden until form submits) -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">✅</div>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:8px">Profile Created!</h3>
+        <p style="color:var(--gray);font-size:14px;margin-bottom:24px">
+          Welcome to CampusLink! Redirecting you to your dashboard...
+        </p>
+        <div style="font-size:24px">🎉</div>
+      </div>
+
+      <!-- LOGIN LINK -->
+      <p class="login-link">
+        Already have an account? <a href="login.html">Log in here</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!--
+    ============================================================
+    JAVASCRIPT
+    Everything between <script>...</script> controls BEHAVIOUR.
+    This runs after the page loads.
+    ============================================================
+  -->
+  <script>
+
+    // ---- SKILLS LIST ----
+    // An array = a list of items in JavaScript
+    const skills = [
+      "Python", "JavaScript", "React", "Node.js",
+      "UI/UX Design", "Figma", "Machine Learning",
+      "Data Science", "Java", "Flutter", "Video Editing",
+      "Content Writing", "Marketing", "Finance", "Research"
+    ];
+
+    // Keep track of which skills the user selected
+    // Set = a list with no duplicates
+    const selectedSkills = new Set();
+
+    // ---- BUILD SKILL BUTTONS ----
+    // document.getElementById("skillsGrid") = finds the element with id="skillsGrid"
+    const skillsGrid = document.getElementById("skillsGrid");
+
+    // Loop through every skill and create a button for it
+    skills.forEach(skill => {
+      const btn = document.createElement("button"); // Create a <button> element
+      btn.type = "button";          // Important: prevents form submission
+      btn.className = "skill-btn";  // Give it the CSS class
+      btn.textContent = skill;      // Set the button text
+
+      // When clicked, toggle selected/unselected
+      btn.addEventListener("click", () => {
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);          // Remove if already selected
+          btn.classList.remove("selected");      // Remove purple styling
+        } else {
+          selectedSkills.add(skill);             // Add to selected set
+          btn.classList.add("selected");         // Add purple styling
+        }
+      });
+
+      skillsGrid.appendChild(btn); // Add button to the page
+    });
+
+    // ---- PASSWORD STRENGTH CHECKER ----
+    const passwordInput = document.getElementById("password");
+    const strengthFill  = document.getElementById("strengthFill");
+    const strengthText  = document.getElementById("strengthText");
+
+    // Runs every time user types in password field
+    passwordInput.addEventListener("input", () => {
+      const val = passwordInput.value;
+      let strength = 0;
+
+      if (val.length >= 8)               strength += 25; // Length check
+      if (/[A-Z]/.test(val))             strength += 25; // Has uppercase
+      if (/[0-9]/.test(val))             strength += 25; // Has number
+      if (/[^A-Za-z0-9]/.test(val))      strength += 25; // Has symbol
+
+      strengthFill.style.width = strength + "%";
+
+      // Change color based on strength
+      if (strength <= 25) {
+        strengthFill.style.background = "#E24B4A"; // Red = weak
+        strengthText.textContent = "Weak password";
+      } else if (strength <= 50) {
+        strengthFill.style.background = "#EF9F27"; // Orange = fair
+        strengthText.textContent = "Fair password";
+      } else if (strength <= 75) {
+        strengthFill.style.background = "#1D9E75"; // Teal = good
+        strengthText.textContent = "Good password";
+      } else {
+        strengthFill.style.background = "#085041"; // Green = strong
+        strengthText.textContent = "Strong password ✓";
+      }
+    });
+
+    // ---- FORM VALIDATION & SUBMISSION ----
+    const form = document.getElementById("registerForm");
+
+    // Helper: show error for an input
+    function showError(inputId, errorId) {
+      document.getElementById(inputId).classList.add("error");
+      document.getElementById(errorId).style.display = "block";
+    }
+
+    // Helper: clear error from an input
+    function clearError(inputId, errorId) {
+      document.getElementById(inputId).classList.remove("error");
+      document.getElementById(errorId).style.display = "none";
+    }
+
+    // Clear errors when user starts typing again
+    ["firstName","lastName","email","department","year","password","confirmPassword"]
+      .forEach(id => {
+        document.getElementById(id).addEventListener("input", () => {
+          document.getElementById(id).classList.remove("error");
+          // Find the matching error span and hide it
+          const errEl = document.getElementById(id + "Error");
+          if (errEl) errEl.style.display = "none";
+        });
+      });
+
+    // When form is submitted
+    form.addEventListener("submit", (e) => {
+      e.preventDefault(); // STOP the page from refreshing (default behavior)
+
+      let valid = true; // Assume valid until we find an error
+
+      // Check first name
+      if (!document.getElementById("firstName").value.trim()) {
+        showError("firstName", "firstNameError");
+        valid = false;
+      }
+
+      // Check last name
+      if (!document.getElementById("lastName").value.trim()) {
+        showError("lastName", "lastNameError");
+        valid = false;
+      }
+
+      // Check email (must contain @ and .)
+      const email = document.getElementById("email").value.trim();
+      if (!email || !email.includes("@")) {
+        showError("email", "emailError");
+        valid = false;
+      }
+
+      // Check department
+      if (!document.getElementById("department").value) {
+        showError("department", "deptError");
+        valid = false;
+      }
+
+      // Check year
+      if (!document.getElementById("year").value) {
+        showError("year", "yearError");
+        valid = false;
+      }
+
+      // Check at least 1 skill selected
+      if (selectedSkills.size === 0) {
+        document.getElementById("skillsError").style.display = "block";
+        valid = false;
+      } else {
+        document.getElementById("skillsError").style.display = "none";
+      }
+
+      // Check password length
+      const password = document.getElementById("password").value;
+      if (password.length < 8) {
+        showError("password", "passwordError");
+        valid = false;
+      }
+
+      // Check passwords match
+      const confirm = document.getElementById("confirmPassword").value;
+      if (password !== confirm) {
+        showError("confirmPassword", "confirmError");
+        valid = false;
+      }
+
+      // If everything is valid, show success!
+      if (valid) {
+        // Collect all form data
+        const userData = {
+          firstName:  document.getElementById("firstName").value,
+          lastName:   document.getElementById("lastName").value,
+          email:      email,
+          department: document.getElementById("department").value,
+          year:       document.getElementById("year").value,
+          skills:     Array.from(selectedSkills), // Convert Set to Array
+          password:   password
+        };
+
+        // For now, just log it in console (later we'll send to backend)
+        // Save user info to localStorage
+localStorage.setItem('user', JSON.stringify(userData));
+
+// Show success and redirect
+form.style.display = 'none';
+document.getElementById('successState').style.display = 'block';
+setTimeout(() => {
+  window.location.href = 'dashboard.html';
+}, 2000);
+
+        // Show success message, hide form
+        form.style.display = "none";
+        document.getElementById("successState").style.display = "block";
+
+        // After 2 seconds, redirect to dashboard
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 2000);
+      }
+    });
+
+  </script>
+
+</body>
+</html>

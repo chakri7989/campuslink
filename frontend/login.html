@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — CampusLink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --purple:    #534AB7;
+      --purple-lt: #EEEDFE;
+      --green:     #085041;
+      --green-mid: #1D9E75;
+      --green-lt:  #E1F5EE;
+      --dark:      #1a1a2e;
+      --gray:      #6B7280;
+      --bg:        #F7F6FF;
+      --error:     #E24B4A;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAVBAR */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 48px;
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--purple);
+      text-decoration: none;
+    }
+    .logo span { color: var(--green-mid); }
+    .nav-right { font-size: 14px; color: var(--gray); text-decoration: none; }
+    .nav-right strong { color: var(--purple); }
+
+    /* PAGE CENTER */
+    .page-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    /* LOGIN CARD */
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      padding: 48px;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    /* HEADER */
+    .card-header { text-align: center; margin-bottom: 36px; }
+    .card-emoji  { font-size: 44px; margin-bottom: 12px; }
+    .card-title  {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .card-subtitle { font-size: 15px; color: var(--gray); }
+
+    /* FORM */
+    .form-group  { margin-bottom: 20px; display: flex; flex-direction: column; }
+    label        { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #E5E4F0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: #FAFAFA;
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus {
+      border-color: var(--purple);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(83,74,183,0.1);
+    }
+    input.error { border-color: var(--error); }
+
+    .error-msg {
+      font-size: 11px;
+      color: var(--error);
+      margin-top: 4px;
+      display: none;
+    }
+
+    /* PASSWORD ROW — label + forgot link */
+    .password-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .forgot-link {
+      font-size: 12px;
+      color: var(--purple);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* SHOW PASSWORD toggle */
+    .input-wrapper { position: relative; }
+    .show-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+      color: var(--gray);
+    }
+
+    /* REMEMBER ME checkbox */
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+    .remember-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--purple);
+      cursor: pointer;
+    }
+
+    /* SUBMIT BUTTON */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-submit:hover  { background: #3C3489; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* LOADING STATE on button */
+    .btn-submit.loading {
+      background: #888;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* REGISTER LINK */
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    .register-link a {
+      color: var(--purple);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .register-link a:hover { text-decoration: underline; }
+
+    /* DIVIDER */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: var(--gray);
+      font-size: 13px;
+    }
+    .divider::before,
+    .divider::after {
+      content:'';
+      flex:1;
+      height:1px;
+      background:#E5E4F0;
+    }
+
+    /* ERROR ALERT BOX (shown if login fails) */
+    .alert-error {
+      background: #FCEBEB;
+      border: 1px solid #F09595;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--error);
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+
+    /* SUCCESS STATE */
+    .success-state {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--green-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 16px;
+    }
+
+    @media (max-width:600px) {
+      .login-card { padding: 32px 20px; }
+      nav { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">Campus<span>Link</span></a>
+    <a href="register.html" class="nav-right">New here? <strong>Create account</strong></a>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="page-wrapper">
+    <div class="login-card">
+
+      <!-- HEADER -->
+      <div class="card-header">
+        <div class="card-emoji">👋</div>
+        <h1 class="card-title">Welcome Back!</h1>
+        <p class="card-subtitle">Log in to your CampusLink account</p>
+      </div>
+
+      <!-- ERROR ALERT (hidden by default) -->
+      <div class="alert-error" id="alertError">
+        ❌ Invalid email or password. Please try again.
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" novalidate>
+
+        <!-- EMAIL -->
+        <div class="form-group">
+          <label for="email">College Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="yourname@college.edu.in"
+            required
+          />
+          <span class="error-msg" id="emailError">Please enter a valid email</span>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <div class="password-row">
+            <label for="password">Password</label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+            <!-- Eye icon to show/hide password -->
+            <span class="show-pw" id="togglePw" title="Show password">👁️</span>
+          </div>
+          <span class="error-msg" id="passwordError">Please enter your password</span>
+        </div>
+
+        <!-- REMEMBER ME -->
+        <div class="remember-row">
+          <input type="checkbox" id="remember" name="remember"/>
+          <label for="remember" style="margin:0;font-weight:400;cursor:pointer">
+            Keep me logged in
+          </label>
+        </div>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn-submit" id="submitBtn">
+          Log In →
+        </button>
+
+      </form>
+
+      <!-- SUCCESS STATE (hidden until login works) -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">✅</div>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:8px">Logged In!</h3>
+        <p style="color:var(--gray);font-size:14px">
+          Taking you to your dashboard...
+        </p>
+      </div>
+
+      <!-- REGISTER LINK -->
+      <p class="register-link">
+        Don't have an account? <a href="register.html">Register here</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+
+    // ---- SHOW / HIDE PASSWORD ----
+    const togglePw   = document.getElementById('togglePw');
+    const passwordIn = document.getElementById('password');
+
+    togglePw.addEventListener('click', () => {
+      // If type is password → change to text (show it)
+      // If type is text     → change to password (hide it)
+      if (passwordIn.type === 'password') {
+        passwordIn.type = 'text';
+        togglePw.textContent = '🙈'; // change icon
+      } else {
+        passwordIn.type = 'password';
+        togglePw.textContent = '👁️';
+      }
+    });
+
+    // ---- CLEAR ERRORS WHEN TYPING ----
+    document.getElementById('email').addEventListener('input', () => {
+      document.getElementById('email').classList.remove('error');
+      document.getElementById('emailError').style.display = 'none';
+      document.getElementById('alertError').style.display = 'none';
+    });
+
+    document.getElementById('password').addEventListener('input', () => {
+      document.getElementById('password').classList.remove('error');
+      document.getElementById('passwordError').style.display = 'none';
+      document.getElementById('alertError').style.display = 'none';
+    });
+
+    // ---- FORM SUBMIT ----
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault(); // Stop page from refreshing
+
+      let valid = true;
+
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      // Validate email
+      if (!email || !email.includes('@')) {
+        document.getElementById('email').classList.add('error');
+        document.getElementById('emailError').style.display = 'block';
+        valid = false;
+      }
+
+      // Validate password
+      if (!password) {
+        document.getElementById('password').classList.add('error');
+        document.getElementById('passwordError').style.display = 'block';
+        valid = false;
+      }
+
+      if (!valid) return; // Stop here if errors found
+
+      // Show loading state on button
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Logging in...';
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      // Simulate a server check (we will connect real backend later)
+      // For now after 1.5 seconds show success
+      setTimeout(() => {
+        // Save user info to localStorage
+const userData = {
+  firstName: email.split('@')[0],
+  lastName: '',
+  email: email,
+  department: 'CS',
+  year: '2'
+};
+localStorage.setItem('user', JSON.stringify(userData));
+
+// Show success and redirect
+document.getElementById('loginForm').style.display = 'none';
+document.getElementById('successState').style.display = 'block';
+setTimeout(() => {
+  window.location.href = 'dashboard.html';
+}, 1500);
+
+      }, 1500);
+
+    });
+
+  </script>
+
+</body>
+</html>

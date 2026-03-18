@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<!-- 
+  =====================================================
+  CAMPUSLINK — Home Page
+  FILE: index.html
+  WHAT THIS FILE DOES:
+    This is the first page every visitor sees.
+    It explains what CampusLink is and invites
+    students to register or login.
+  =====================================================
+-->
+<html lang="en">
+
+<head>
+  <!-- Tell the browser this is HTML5 and use UTF-8 characters -->
+  <meta charset="UTF-8">
+  <!-- Make it look good on mobile phones too -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Title shown in browser tab -->
+  <title>CampusLink — Connect Skills, Build Teams</title>
+
+  <!-- Google Fonts — gives us beautiful typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ==================== CSS STYLES ==================== -->
+  <style>
+
+    /* ---- RESET & ROOT VARIABLES ---- */
+    /* Variables = reusable values so we only change color in ONE place */
+    :root {
+      --purple:     #534AB7;
+      --purple-lt:  #EEEDFE;
+      --green:      #085041;
+      --green-mid:  #1D9E75;
+      --green-lt:   #E1F5EE;
+      --coral:      #D85A30;
+      --dark:       #1a1a2e;
+      --gray:       #888780;
+      --white:      #ffffff;
+      --bg:         #F7F6FF;
+    }
+
+    /* Remove default browser spacing */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ---- NAVBAR ---- */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 48px;
+      background: white;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--green-mid); }
+
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--purple); }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--purple);
+      color: white;
+    }
+    .btn-primary:hover { background: #3C3489; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--purple);
+      border: 2px solid var(--purple);
+    }
+    .btn-outline:hover { background: var(--purple-lt); }
+
+    .btn-green {
+      background: var(--green);
+      color: white;
+      padding: 14px 36px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+    .btn-green:hover { background: var(--green-mid); transform: translateY(-2px); }
+
+    /* ---- HERO SECTION ---- */
+    /* The big banner at the top of the page */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 80px 48px;
+      gap: 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-text { flex: 1; }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--purple-lt);
+      color: var(--purple);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+
+    .hero-title .highlight { color: var(--green-mid); }
+    .hero-title .highlight2 { color: var(--purple); }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* Hero illustration side */
+    .hero-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-card-stack {
+      position: relative;
+      width: 340px;
+      height: 300px;
+    }
+
+    /* Floating profile cards in the hero */
+    .profile-card {
+      position: absolute;
+      background: white;
+      border-radius: 16px;
+      padding: 18px 22px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      min-width: 200px;
+    }
+
+    .profile-card.card-1 { top: 0;   left: 0;   animation: float1 3s ease-in-out infinite; }
+    .profile-card.card-2 { top: 80px; right: 0;  animation: float2 3.5s ease-in-out infinite; }
+    .profile-card.card-3 { bottom: 0; left: 40px; animation: float1 4s ease-in-out infinite; }
+
+    @keyframes float1 {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes float2 {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(10px); }
+    }
+
+    .card-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+    .card-role { font-size: 12px; color: var(--gray); margin-bottom: 10px; }
+
+    .skill-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .skill-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .tag-purple { background: var(--purple-lt); color: var(--purple); }
+    .tag-green  { background: var(--green-lt);  color: var(--green);  }
+    .tag-coral  { background: #FAECE7;           color: var(--coral);  }
+
+    /* ---- HOW IT WORKS SECTION ---- */
+    .section {
+      padding: 80px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--gray);
+      font-size: 16px;
+      margin-bottom: 56px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      border: 1px solid #eee;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .step-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    }
+
+    .step-number {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--purple-lt);
+      color: var(--purple);
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .step-icon { font-size: 32px; margin-bottom: 12px; }
+    .step-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .step-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+    /* ---- FEATURES SECTION ---- */
+    .features-bg {
+      background: var(--dark);
+      padding: 80px 48px;
+    }
+
+    .features-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px;
+      transition: background 0.2s;
+    }
+
+    .feature-card:hover { background: rgba(255,255,255,0.09); }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc { font-size: 13px; color: #9FA6B2; line-height: 1.6; }
+
+    .features-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      text-align: center;
+    }
+
+    .features-sub { text-align: center; color: #9FA6B2; margin-top: 8px; font-size: 15px; }
+
+    /* ---- CTA SECTION ---- */
+    .cta-section {
+      background: var(--purple);
+      padding: 80px 48px;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .cta-sub { color: #CECBF6; font-size: 17px; margin-bottom: 36px; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      background: var(--dark);
+      color: #9FA6B2;
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+    }
+    .footer-logo span { color: var(--green-mid); }
+
+    /* ---- RESPONSIVE for mobile ---- */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .hero { flex-direction: column; padding: 40px 24px; }
+      .hero-title { font-size: 36px; }
+      .hero-visual { display: none; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .section { padding: 48px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav>
+    <a href="index.html" class="logo">Campus<span>Link</span></a>
+    <div class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#features">Features</a>
+      <a href="login.html" class="btn btn-outline">Login</a>
+      <a href="register.html" class="btn btn-primary">Join Free</a>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <div class="hero-text">
+      <span class="hero-badge">🎓 For Campus Students</span>
+      <h1 class="hero-title">
+        Find Your<br>
+        <span class="highlight">Perfect Team</span><br>
+        <span class="highlight2">Build Ideas</span> Together
+      </h1>
+      <p class="hero-subtitle">
+        CampusLink connects students who have skills with students
+        who have ideas — so great projects actually get built.
+      </p>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn btn-green">Get Started Free →</a>
+        <a href="#how-it-works" class="btn btn-outline">See How It Works</a>
+      </div>
+    </div>
+
+    <!-- Floating cards visual -->
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+
+        <div class="profile-card card-1">
+          <div class="card-avatar" style="background:#EEEDFE;">👨‍💻</div>
+          <div class="card-name">Aditya K.</div>
+          <div class="card-role">2nd Year · CS</div>
+          <div class="skill-tags">
+            <span class="skill-tag tag-purple">Python</span>
+            <span class="skill-tag tag-purple">ML / AI</span>
+          </div>
+        </div>
+
+        <div class="profile-card card-2">
+          <div class="card-avatar" style="background:#E1F5EE;">👩‍🎨</div>
+          <div class="card-name">Priya R.</div>
+          <div class="card-role">3rd Year · Design</div>
+          <div class="skill-tags">
+            <span class="skill-tag tag-green">UI/UX</span>
+            <span class="skill-tag tag-green">Figma</span>
+          </div>
+        </div>
+
+        <div class="profile-card card-3">
+          <div class="card-avatar" style="background:#FAECE7;">🤝</div>
+          <div class="card-name">Team Matched!</div>
+          <div class="card-role">Hackathon 2025</div>
+          <div class="skill-tags">
+            <span class="skill-tag tag-coral">Building now →</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HOW IT WORKS ==================== -->
+  <section class="section" id="how-it-works">
+    <h2 class="section-title">How CampusLink Works</h2>
+    <p class="section-sub">Three simple steps to find your team and build something great</p>
+
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <div class="step-icon">📝</div>
+        <div class="step-number">1</div>
+        <div class="step-title">Create Your Profile</div>
+        <div class="step-desc">
+          Sign up and add your skills, interests, and what kind of
+          projects or hackathons you want to join.
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">🔍</div>
+        <div class="step-number">2</div>
+        <div class="step-title">Browse or Post Opportunities</div>
+        <div class="step-desc">
+          Explore hackathons, research projects, and startup ideas.
+          Or post your own idea and find the right teammates.
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">🚀</div>
+        <div class="step-number">3</div>
+        <div class="step-title">Get Matched &amp; Build</div>
+        <div class="step-desc">
+          Our platform suggests students whose skills complement yours.
+          Connect, form a team, and start building together.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== FEATURES ==================== -->
+  <section class="features-bg" id="features">
+    <div class="features-inner">
+      <h2 class="features-title">Everything You Need to Collaborate</h2>
+      <p class="features-sub">Built specifically for campus students and their projects</p>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">👤</div>
+          <div class="feature-title">Skill Profiles</div>
+          <div class="feature-desc">
+            Showcase your skills, projects, and GitHub. Let the right
+            people find you based on what you can actually do.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <div class="feature-title">Opportunity Board</div>
+          <div class="feature-desc">
+            All hackathons, projects and campus events in one place.
+            Filter by skill, domain, or team size needed.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🤝</div>
+          <div class="feature-title">Smart Matching</div>
+          <div class="feature-desc">
+            Get matched with students whose skills fill your gaps.
+            No more relying on luck or who you already know.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <div class="feature-title">Verified Profiles</div>
+          <div class="feature-desc">
+            Campus email verification ensures every profile is a
+            real student from your institution.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">Team Messaging</div>
+          <div class="feature-desc">
+            Once matched, communicate directly inside the platform.
+            No need for external tools to get started.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Team Dashboard</div>
+          <div class="feature-desc">
+            Track your team, manage roles, and keep everyone aligned
+            on what needs to be built and by when.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA ==================== -->
+  <section class="cta-section">
+    <h2 class="cta-title">Ready to Find Your Team?</h2>
+    <p class="cta-sub">Join hundreds of students already building on CampusLink</p>
+    <a href="register.html" class="btn btn-green">Create Your Free Profile →</a>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-logo">Campus<span>Link</span></div>
+    <div>Built for students · by students &nbsp;|&nbsp; SDG 4 · SDG 17</div>
+    <div>© 2025 CampusLink</div>
+  </footer>
+
+</body>
+</html>
