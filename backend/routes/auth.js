@@ -10,7 +10,7 @@
 const express  = require('express');
 const bcrypt   = require('bcryptjs');    // For encrypting passwords
 const jwt      = require('jsonwebtoken'); // For creating login tokens
-const User     = require('../models/User'); // Our User model
+const User = require(require('path').join(__dirname, '..', 'models', 'User')); // Our User model
 
 const router = express.Router(); // Creates a mini router
 
