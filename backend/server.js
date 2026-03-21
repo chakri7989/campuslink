@@ -29,8 +29,9 @@ app.use(express.urlencoded({ extended: true })); // Allow form data
 
 // ── IMPORT ROUTES ──
 // Routes = the different URLs your server can handle
-const authRoutes  = require('./routes/auth');   // /api/auth/register and /api/auth/login
-const userRoutes  = require('./routes/users');  // /api/users
+const path = require('path');
+const authRoutes  = require(path.join(__dirname, 'routes', 'auth'));
+const userRoutes  = require(path.join(__dirname, 'routes', 'users'));  // /api/users
 
 // ── USE ROUTES ──
 // When someone visits /api/auth, use the authRoutes file
