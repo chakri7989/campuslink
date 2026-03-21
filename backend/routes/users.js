@@ -8,7 +8,7 @@
 */
 
 const express = require('express');
-const User    = require('../models/User');
+const User = require(require('path').join(__dirname, '..', 'models', 'User'));
 const router  = express.Router();
 
 // ── GET ALL USERS ──
