@@ -401,25 +401,43 @@
 
       // Simulate a server check (we will connect real backend later)
       // For now after 1.5 seconds show success
-      setTimeout(() => {
-        // Save user info to localStorage
-const userData = {
-  firstName: email.split('@')[0],
-  lastName: '',
-  email: email,
-  department: 'CS',
-  year: '2'
-};
-localStorage.setItem('user', JSON.stringify(userData));
+      fetch("https://campuslink-vzj3.onrender.com/api/auth/login", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    email: email,
+    password: password
+  })
+})
+.then(res => res.json())
+.then(data => {
 
-// Show success and redirect
-document.getElementById('loginForm').style.display = 'none';
-document.getElementById('successState').style.display = 'block';
-setTimeout(() => {
-  window.location.href = 'dashboard.html';
-}, 1500);
+  if(data.token){
+    // Save token
+    localStorage.setItem("token", data.token);
 
-      }, 1500);
+    // Show success
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1500);
+
+  } else {
+    document.getElementById('alertError').style.display = 'block';
+    btn.textContent = 'Log In →';
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+
+})
+.catch(err => {
+  console.error(err);
+  alert("Server error");
+});
 
     });
 
