@@ -782,15 +782,28 @@
         };
 
         // For now, just log it in console (later we'll send to backend)
-        // Save user info to localStorage
-localStorage.setItem('user', JSON.stringify(userData));
+        fetch("https://campuslink-vzj3.onrender.com/api/auth/register", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(userData)
+})
+.then(res => res.json())
+.then(data => {
+  console.log("Server response:", data);
 
-// Show success and redirect
-form.style.display = 'none';
-document.getElementById('successState').style.display = 'block';
-setTimeout(() => {
-  window.location.href = 'dashboard.html';
-}, 2000);
+  form.style.display = "none";
+  document.getElementById("successState").style.display = "block";
+
+  setTimeout(() => {
+    window.location.href = "dashboard.html";
+  }, 2000);
+})
+.catch(err => {
+  console.error("Registration error:", err);
+  alert("Registration failed");
+});
 
         // Show success message, hide form
         form.style.display = "none";
