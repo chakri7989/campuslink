@@ -414,29 +414,36 @@
 .then(res => res.json())
 .then(data => {
 
-  if(data.token){
-    // Save token
-    localStorage.setItem("token", data.token);
+  if (data.token) {
 
-    // Show success
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('successState').style.display = 'block';
+  // Save login token
+  localStorage.setItem("token", data.token);
 
-    setTimeout(() => {
-      window.location.href = "dashboard.html";
-    }, 1500);
+  // SAVE USER DATA (NEW LINE)
+  localStorage.setItem("user", JSON.stringify(data.user));
 
-  } else {
+  // Show success screen
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('successState').style.display = 'block';
+
+  setTimeout(() => {
+    window.location.href = "dashboard.html";
+  }, 1500);
+
+} else {
+
     document.getElementById('alertError').style.display = 'block';
+
     btn.textContent = 'Log In →';
     btn.classList.remove('loading');
     btn.disabled = false;
+
   }
 
 })
 .catch(err => {
   console.error(err);
-  alert("Server error");
+  alert("Login failed. Please try again.");
 });
 
     });
