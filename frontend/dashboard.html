@@ -121,8 +121,8 @@
     <div class="sidebar-user">
       <div class="sidebar-avatar">👨‍💻</div>
       <div>
-        <div class="sidebar-name">Aditya Kumar</div>
-        <div class="sidebar-dept">CS · 2nd Year</div>
+        <div class="sidebar-name" id="userName"></div>
+        <div class="sidebar-dept" id="userDept"></div>
       </div>
     </div>
     <div class="nav-section-title">Main</div>
@@ -154,7 +154,7 @@
       <!-- WELCOME -->
       <div class="welcome-banner">
         <div class="welcome-text">
-          <h2>Welcome back, Aditya! 👋</h2>
+          <h2 id="welcomeMsg">Welcome back! 👋</h2>
           <p>You have 3 new match suggestions and 2 open opportunities waiting for you.</p>
         </div>
         <div class="welcome-emoji">🚀</div>
@@ -279,22 +279,17 @@
   </div>
 
   <script>// Protect dashboard (check login)
-const token = localStorage.getItem("token");
 
-if (!token) {
-  alert("Please login first");
-  window.location.href = "login.html";
-}
     // Load user from localStorage
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
-      const userName = document.getElementById('userName');
-      const userDept = document.getElementById('userDept');
-      const welcomeMsg = document.getElementById('welcomeMsg');
-      if (userName) userName.textContent = user.firstName + ' ' + user.lastName;
-      if (userDept) userDept.textContent = user.department + ' · Year ' + user.year;
-      if (welcomeMsg) welcomeMsg.textContent = 'Welcome back, ' + user.firstName + '! 👋';
+      if (document.getElementById('userName'))
+        document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName;
+      if (document.getElementById('userDept'))
+        document.getElementById('userDept').textContent = user.department + ' · Year ' + user.year;
+      if (document.getElementById('welcomeMsg'))
+        document.getElementById('welcomeMsg').textContent = 'Welcome back, ' + user.firstName + '! 👋';
     }
 
     function connectStudent(btn) {
@@ -317,6 +312,6 @@ if (!token) {
       }
     }
   </script>
-
+  <script src="userSession.js"></script>
 </body>
 </html>
