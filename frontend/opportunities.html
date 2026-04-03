@@ -332,8 +332,8 @@
     <div class="sidebar-user">
       <div class="sidebar-avatar">👨‍💻</div>
       <div>
-        <div class="sidebar-name">Aditya Kumar</div>
-        <div class="sidebar-dept">CS · 2nd Year</div>
+        <div class="sidebar-name" id="sidebarName">Loading...</div>
+        <div class="sidebar-dept" id="sidebarDept">Loading...</div>
       </div>
     </div>
     <div class="nav-section-title">Main</div>
@@ -628,7 +628,19 @@
   <script>
 
     // ── ACTIVE TAB ──
-    let activeTab = 'all';
+    // Load real user data
+const savedUser = localStorage.getItem('user');
+if (!savedUser) {
+  window.location.href = 'login.html';
+} else {
+  const user = JSON.parse(savedUser);
+  if (document.getElementById('sidebarName'))
+    document.getElementById('sidebarName').textContent = user.firstName + ' ' + user.lastName;
+  if (document.getElementById('sidebarDept'))
+    document.getElementById('sidebarDept').textContent = user.department + ' · Year ' + user.year;
+}
+
+let activeTab = 'all';
 
     function setTab(btn, type) {
       // Remove active from all tabs
@@ -769,6 +781,6 @@
     }
 
   </script>
-
+<script src="userSession.js"></script>
 </body>
 </html>
