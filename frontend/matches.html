@@ -613,10 +613,11 @@
 
   </script>
 <script>
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (user) {
-    document.getElementById("username").textContent = user.name;
-    document.getElementById("userDept").textContent = user.department || user.dept || "";
+  const savedUser = localStorage.getItem('user');
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
+    document.getElementById('username').textContent = user.firstName + ' ' + user.lastName;
+    document.getElementById('userDept').textContent = user.department + ' · Year ' + user.year;
   }
 </script>
 </body>
