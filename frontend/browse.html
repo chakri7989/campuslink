@@ -402,15 +402,12 @@
     }
   </script>
 <script>
-  <script>
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (user) {
-    const name = user.name || user.fullName || user.username || "";
-    const dept = user.department || user.dept || user.course || user.branch || "";
-    document.getElementById("username").textContent = name;
-    document.getElementById("userDept").textContent = dept;
+  const savedUser = localStorage.getItem('user');
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
+    document.getElementById('username').textContent = user.firstName + ' ' + user.lastName;
+    document.getElementById('userDept').textContent = user.department + ' · Year ' + user.year;
   }
-</script>
 </script>
 </body>
 </html>
