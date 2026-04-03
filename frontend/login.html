@@ -414,23 +414,32 @@
 .then(res => res.json())
 .then(data => {
 
+  console.log("Backend response:", data); // This shows what backend sends
+
   if (data.token) {
 
-  // Save login token
-  localStorage.setItem("token", data.token);
+    // Save login token
+    localStorage.setItem("token", data.token);
 
-  // SAVE USER DATA (NEW LINE)
-  localStorage.setItem("user", JSON.stringify(data.user));
+    // Try all possible field names the backend might use
+    const userData = data.user || data.data || data.student || data.profile || {};
 
-  // Show success screen
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('successState').style.display = 'block';
+    // If name is still missing, build it from email
+    if (!userData.name && !userData.fullName) {
+      userData.name = email.split("@")[0]; // use part before @ as fallback
+    }
 
-  setTimeout(() => {
-    window.location.href = "dashboard.html";
-  }, 1500);
+    localStorage.setItem("user", JSON.stringify(userData));
 
-} else {
+    // Show success screen
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1500);
+
+  } else {
 
     document.getElementById('alertError').style.display = 'block';
 
