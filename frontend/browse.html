@@ -401,6 +401,16 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
   </script>
-<script src="userSession.js"></script>
+<script>
+  <script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    const name = user.name || user.fullName || user.username || "";
+    const dept = user.department || user.dept || user.course || user.branch || "";
+    document.getElementById("username").textContent = name;
+    document.getElementById("userDept").textContent = dept;
+  }
+</script>
+</script>
 </body>
 </html>
