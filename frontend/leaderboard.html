@@ -289,6 +289,15 @@
 
     </div>
   </div>
-<script src="userSession.js"></script>
+<script>
+  const savedUser = localStorage.getItem('user');
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
+    document.getElementById('username').textContent = user.firstName + ' ' + user.lastName;
+    document.getElementById('userDept').textContent = user.department + ' · Year ' + user.year;
+    document.getElementById('leaderboardUser').textContent = user.firstName + ' ' + user.lastName;
+    document.getElementById('leaderboardDept').textContent = user.department + ' · Year ' + user.year;
+  }
+</script>
 </body>
 </html>
