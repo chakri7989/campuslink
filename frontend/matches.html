@@ -612,6 +612,12 @@
     }
 
   </script>
-<script src="userSession.js"></script>
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    document.getElementById("username").textContent = user.name;
+    document.getElementById("userDept").textContent = user.department || user.dept || "";
+  }
+</script>
 </body>
 </html>
