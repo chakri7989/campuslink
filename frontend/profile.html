@@ -322,8 +322,8 @@
     <div class="sidebar-user">
       <div class="sidebar-avatar">👨‍💻</div>
       <div>
-        <div class="sidebar-name">Aditya Kumar</div>
-        <div class="sidebar-dept">CS · 2nd Year</div>
+        <div class="sidebar-name" id="sidebarName"></div>
+        <div class="sidebar-dept" id="userDept"></div>
       </div>
     </div>
     <div class="nav-section-title">Main</div>
@@ -360,8 +360,8 @@
           <div class="profile-left">
             <div class="profile-big-avatar">👨‍💻</div>
             <div class="profile-info">
-              <div class="profile-name">Aditya Kumar</div>
-              <div class="profile-meta">Computer Science · 2nd Year · JNTU Hyderabad</div>
+              <div class="profile-name" id="profileName"></div>
+              <div class="profile-meta" id="profileMeta"></div>
               <div class="profile-badges">
                 <span class="badge-pill bp-purple">Available for projects</span>
                 <span class="badge-pill bp-green">Open to hackathons</span>
@@ -515,11 +515,13 @@
 
     // ── SKILLS DATA ──
     // This is the list of skills shown on the profile
-    let mySkills = [
-      "Python", "JavaScript", "React",
-      "Node.js", "Machine Learning",
-      "Data Science", "MongoDB", "Figma"
-    ];
+    // Get user from localStorage
+const user = JSON.parse(localStorage.getItem('user')) || {};
+
+// Load skills from user data or use defaults
+let mySkills = user.skills && user.skills.length > 0
+  ? user.skills
+  : ["Python", "JavaScript", "React", "Node.js"];
 
     // ── BUILD SKILL CHIPS ──
     function renderSkills() {
@@ -578,6 +580,15 @@
     function saveProfile() {
       // Later this will send data to the backend with fetch()
       // For now just show a success message
+      const about = document.getElementById("aboutText").value;
+
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      user.bio = about;
+      user.skills = mySkills;
+
+      localStorage.setItem("user", JSON.stringify(user));
+
       showToast('✅ Profile saved successfully!');
     }
 
@@ -593,7 +604,58 @@
     }
 
     // ── RUN ON PAGE LOAD ──
-    renderSkills(); // Show skills when page opens
+    // Load saved user profile
+// Load all user data dynamically
+if (user) {
+  // Sidebar
+  if (document.getElementById('sidebarName'))
+    document.getElementById('sidebarName').textContent = (user.firstName || '') + ' ' + (user.lastName || '');
+  if (document.getElementById('userDept'))
+    document.getElementById('userDept').textContent = (user.department || '') + ' · Year ' + (user.year || '');
+
+  // Profile header
+  if (document.getElementById('profileName'))
+    document.getElementById('profileName').textContent = (user.firstName || '') + ' ' + (user.lastName || '');
+  if (document.getElementById('profileMeta'))
+    document.getElementById('profileMeta').textContent = (user.department || '') + ' · Year ' + (user.year || '') + ' · ' + (user.college || 'Campus');
+
+  // About text
+  if (user.bio && document.getElementById('aboutText'))
+    document.getElementById('aboutText').value = user.bio;
+
+  // Skills
+  if (user.skills && user.skills.length > 0)
+    mySkills = user.skills;
+
+  // Email in social links
+  const emailInput = document.querySelector('input[type="email"]');
+  if (emailInput && user.email)
+    emailInput.value = user.email;
+
+  // GitHub
+  const githubInput = document.querySelector('input[placeholder="GitHub URL"]');
+  if (githubInput && user.github)
+    githubInput.value = user.github;
+
+  // LinkedIn
+  const linkedinInput = document.querySelector('input[placeholder="LinkedIn URL"]');
+  if (linkedinInput && user.linkedin)
+    linkedinInput.value = user.linkedin;
+}
+
+    renderSkills();
+
+// Show real user name in sidebar and profile header
+if (user) {
+  if (document.getElementById('sidebarName'))
+    document.getElementById('sidebarName').textContent = user.firstName + ' ' + user.lastName;
+  if (document.getElementById('userDept'))
+    document.getElementById('userDept').textContent = user.department + ' · Year ' + user.year;
+  if (document.getElementById('profileName'))
+    document.getElementById('profileName').textContent = user.firstName + ' ' + user.lastName;
+  if (document.getElementById('profileMeta'))
+    document.getElementById('profileMeta').textContent = user.department + ' · Year ' + user.year;
+}
 
   </script>
 
